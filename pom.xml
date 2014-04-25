@@ -55,6 +55,7 @@
         <module>webmagic-saxon</module>
         <module>webmagic-samples</module>
         <module>webmagic-avalon</module>
+        <module>qunar-admin</module>
     </modules>
 
     <dependencyManagement>
