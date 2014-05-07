@@ -1,5 +1,8 @@
 package us.codecraft.webmagic.selector;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -162,5 +165,45 @@ public class Html extends PlainText {
         } else {
             return selector.selectList(getText());
         }
+    }
+
+    public String selectDocument(List<Selector> selectorList) {
+        return selectDocumentRecursion(getText(), selectorList);
+    }
+
+    private String selectDocumentRecursion(String text, List<Selector> selectorList) {
+
+        if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(selectorList)) {
+            return text;
+        }
+        Selector selector = selectorList.remove(0);
+        if (selector == null) {
+            return text;
+        }
+
+        return selectDocumentRecursion(selector.select(text), selectorList);
+    }
+
+    public List<String> selectDocumentForList(List<Selector> selectorList) {
+        List<String> stringList = Lists.newArrayList();
+        stringList.add(getText());
+        return selectDocumentRecursion(stringList, selectorList);
+    }
+
+    private List<String> selectDocumentRecursion(List<String> stringList, List<Selector> selectorList) {
+
+        if (CollectionUtils.isEmpty(stringList) || CollectionUtils.isEmpty(selectorList)) {
+            return stringList;
+        }
+        Selector selector = selectorList.remove(0);
+        if (selector == null) {
+            return stringList;
+        }
+
+        List<String> resultList = Lists.newArrayList();
+        for (String aString : stringList) {
+            resultList.addAll(selector.selectList(aString));
+        }
+        return selectDocumentRecursion(resultList, selectorList);
     }
 }

@@ -94,7 +94,7 @@ public class Spider implements Runnable, Task {
 
     protected final static int STAT_STOPPED = 2;
 
-    protected boolean spawnUrl = true;
+    protected boolean spawnUrl = true;          //是否生成新链接
 
     protected boolean destroyWhenExit = true;
 
