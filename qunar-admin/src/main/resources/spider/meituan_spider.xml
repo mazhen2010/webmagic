@@ -12,12 +12,13 @@
         <property name="fieldType" value="TARGET"/>
         <property name="expressionType" value="Regex"/>
         <property name="expressionValue" value="http://bj\.meituan\.com/category/jingdianmenpiao/\d+"/>
-        <property name="multi" value="true"/>
         <property name="expressionParams">
             <list>
                 <value>XPath://div[@class='sub-filter-wrapper J-sub-city-list']</value>
             </list>
         </property>
+        <property name="multi" value="true"/>
+        <property name="matchUrlRegex" value="http://bj.meituan.com/category/jingdianmenpiao$"/>
     </bean>
 
     <bean id="meituanListRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
@@ -36,21 +37,24 @@
                 <value>NEXT1:,#120</value>
             </list>
         </property>
+        <property name="matchUrlRegex" value="http://bj.meituan.com/category/jingdianmenpiao/[\d]+[\s\S]*"/>
     </bean>
 
-    <bean id="meituanSightNameRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="sight_name"/>
+    <bean id="meituanProductNameRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
+        <property name="fieldName" value="productName"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-container']/div[@class='deal-component-headline divider']/div[@class='sans-serif']/h1[@class='deal-component-title']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
-    <bean id="meituanSightProvinceRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="sight_name_province"/>
+    <bean id="meituanProductProvinceRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
+        <property name="fieldName" value="productNameCity"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-headline divider']/div[@class='sans-serif']/span[@class='deal-component-title-prefix']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanTitleRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="title"/>
@@ -58,6 +62,7 @@
         <property name="expressionValue">
             <value>//div[@class='deal-component-description']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanPriceRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="price"/>
@@ -65,13 +70,15 @@
         <property name="expressionValue">
             <value>//div[@class='deal-component-price']/h2[@class='deal-component-price-current sans-serif orange item']/strong/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanOriginPriceRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="origin_price"/>
+        <property name="fieldName" value="originPrice"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-price']/del[@class='item']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanSourceRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="score"/>
@@ -79,13 +86,15 @@
         <property name="expressionValue">
             <value>//a[@class='look-normal']/span[@class='item']/span[@class='orange']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanCommentCountRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="comment_count"/>
+        <property name="fieldName" value="commentCount"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-rating divider']/span[1]/a[3]/span[@class='vertical-divider item']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanAmountRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="amount"/>
@@ -93,6 +102,7 @@
         <property name="expressionValue">
             <value>//div[@class='deal-component-rating divider']/span[2]/span[@class='deal-component-rating-sold-count']/span[@class='orange']/strong/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanPeriod1Rule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="period1"/>
@@ -100,6 +110,7 @@
         <property name="expressionValue">
             <value>//span[@class='deal-component-expiry-valid-through']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanPeriod2Rule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="period2"/>
@@ -107,6 +118,7 @@
         <property name="expressionValue">
             <value>//span[@class='deal-component-expiry-notice orange']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanPeriod3Rule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="period3"/>
@@ -114,6 +126,7 @@
         <property name="expressionValue">
             <value>//span[@class='deal-component-expiry-notice-detail']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanLimitEnterInfoRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="limitEnterInfo"/>
@@ -121,20 +134,23 @@
         <property name="expressionValue">
             <value>//div[@class='deal-component-opening-hours cf deal-component-inline-text-folded']/span[@class='deal-component-inline-text-container left']/span[@class='deal-component-inline-text-wrapper']/span/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanAnytimeRefundRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="anytime_refund"/>
+        <property name="fieldName" value="anytimeRefund"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-commitments divider']/a[@class='anytime-money-back item']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanOvertimeRefundRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
-        <property name="fieldName" value="overtime_refund"/>
+        <property name="fieldName" value="overtimeRefund"/>
         <property name="expressionType" value="XPath"/>
         <property name="expressionValue">
             <value>//div[@class='deal-component-commitments divider']/a[@class='expiring-money-back item']/text()</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
     <bean id="meituanBookInfoRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
         <property name="fieldName" value="bookInfo"/>
@@ -142,15 +158,26 @@
         <property name="expressionValue">
             <value>//div[@class='deal-term']</value>
         </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
+    </bean>
+    <bean id="meituanSourceIdRule" class="com.qunar.piao.magic.core.VerticalExtractRule">
+        <property name="fieldName" value="sourceId"/>
+        <property name="expressionType" value="XPath"/>
+        <property name="expressionValue">
+            <value>//form/div[@class='deal-component-purchase-button']/a[@class='J-add-mini-cart mini-cart-button mini-cart-add']/@data-dealid</value>
+        </property>
+        <property name="matchUrlRegex" value="http://www.meituan.com/deal/[\d]+.html"/>
     </bean>
 
     <bean id="meituanProcessor" class="com.qunar.piao.magic.core.ConfigurableVerticalPageProcessor" >
         <property name="site" ref="meituanSite"/>
-        <property name="seedUrl" value="http://www.meituan.com/deal/6624891.html"/>
+        <property name="seedUrl" value="http://bj.meituan.com/category/jingdianmenpiao"/>
         <property name="extractRules">
             <list>
-                <ref bean="meituanSightNameRule"/>
-                <ref bean="meituanSightProvinceRule"/>
+                <ref bean="meituanCategoryRule"/>
+                <ref bean="meituanListRule"/>
+                <ref bean="meituanProductNameRule"/>
+                <ref bean="meituanProductProvinceRule"/>
                 <ref bean="meituanTitleRule"/>
                 <ref bean="meituanPriceRule"/>
                 <ref bean="meituanOriginPriceRule"/>
@@ -164,6 +191,7 @@
                 <ref bean="meituanAnytimeRefundRule"/>
                 <ref bean="meituanOvertimeRefundRule"/>
                 <ref bean="meituanBookInfoRule"/>
+                <ref bean="meituanSourceIdRule"/>
             </list>
         </property>
     </bean>

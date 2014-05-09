@@ -1,11 +1,13 @@
 package com.qunar.piao.magic.core;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.List;
 
@@ -22,51 +24,74 @@ public class ConfigurableVerticalPageProcessor implements PageProcessor {
 
     private List<VerticalExtractRule> extractRules;
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void process(Page page) {
         for (VerticalExtractRule extractRule : extractRules) {
-            if (extractRule.isMulti()) {
-                List<String> resultList = page.getHtml().selectDocumentForList(extractRule.getSelectorList());
-                if (extractRule.isNotNull() && CollectionUtils.isEmpty(resultList)) {
-                    page.setSkip(true);
-                    return;
-                }
-                if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.TARGET) ==0) {
-                    //test start
-                    String temp = resultList.get(0);
-                    resultList.clear();
-                    resultList.add(temp);
-                    //test end
-                    page.addTargetRequests(resultList);
-                } else if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.ITEM) ==0) {
-                    page.putField(extractRule.getFieldName(), resultList);
-                }
-            } else {
-                String result = page.getHtml().selectDocument(extractRule.getSelectorList());
-                if (extractRule.isNotNull() && result == null) {
-                    page.setSkip(true);
-                    return;
-                }
-                if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.TARGET) ==0) {
+            if (!extractRule.isMatchUrl(page.getUrl().toString())) {
+                continue;
+            }
 
-                    List<String> processedResult = extractRule.processResult(result, page.getUrl().toString());
-                    if (!CollectionUtils.isEmpty(processedResult)) {
-                        //test start
-                        String temp = processedResult.get(0);
-                        processedResult.clear();
-                        processedResult.add(temp);
-                        //test end
-                        page.addTargetRequests(processedResult);
-                    } else {
-                        page.addTargetRequest(result);
-                    }
-                } else if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.ITEM) ==0) {
-                    page.putField(extractRule.getFieldName(), result);
-                }
+            if (extractRule.isMulti()) {
+                processMultiResult(page, extractRule);
+            } else {
+                processSimpleResult(page, extractRule);
             }
         }
-        //test
-        System.out.print(page.getResultItems());
+
+        setPageSkipPipeline(page);
+        logger.info("ConfigurableVerticalPageProcessor process {}, target request size {}, field size {}, skip {}",
+                        page.getUrl(), page.getTargetRequests().size(), page.getResultItems().getAll().size(),
+                        page.getResultItems().isSkip());
+    }
+
+    private void processMultiResult(Page page, VerticalExtractRule extractRule) {
+        List<String> resultList = page.getHtml().selectDocumentForList(extractRule.getSelectorList());
+        if (CollectionUtils.isEmpty(resultList)) {
+            return;
+        }
+        if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.TARGET) ==0) {
+            //test start 仅产生一个链接
+//            String temp = resultList.get(0);
+//            resultList.clear();
+//            resultList.add(temp);
+            //test end
+            page.addTargetRequests(resultList);
+        } else if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.ITEM) ==0) {
+            page.putField(extractRule.getFieldName(), resultList);
+        }
+    }
+
+    private void processSimpleResult(Page page, VerticalExtractRule extractRule) {
+        String result = page.getHtml().selectDocument(extractRule.getSelectorList());
+        if (StringUtils.isEmpty(result)) {
+            return;
+        }
+        if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.TARGET) ==0) {
+
+            List<String> processedResult = extractRule.processResult(result, page.getUrl().toString());
+            if (!CollectionUtils.isEmpty(processedResult)) {
+                //test start 仅产生一个链接
+//                String temp = processedResult.get(0);
+//                processedResult.clear();
+//                processedResult.add(temp);
+                //test end
+                page.addTargetRequests(processedResult);
+            } else {
+                page.addTargetRequest(result);
+            }
+        } else if (extractRule.getFieldType().compareTo(VerticalExtractRule.ExtractFieldType.ITEM) ==0) {
+            page.putField(extractRule.getFieldName(), result);
+        }
+    }
+
+    private void setPageSkipPipeline(Page page) {
+        if (MapUtils.isEmpty(page.getResultItems().getAll())) {
+            page.setSkip(true);
+            return;
+        }
+        page.putField("wrapperId", this.getSite().getDomain());
     }
 
     @Override

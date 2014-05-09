@@ -10,6 +10,8 @@ import us.codecraft.webmagic.selector.JsonPathSelector;
 import us.codecraft.webmagic.selector.Selector;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static us.codecraft.webmagic.selector.Selectors.$;
 import static us.codecraft.webmagic.selector.Selectors.regex;
@@ -36,11 +38,13 @@ public class VerticalExtractRule {
 
     private List<String> resultParams;
 
-    private boolean multi = false;
+    private boolean multi = false;          //多匹配结果标志
 
     private volatile List<Selector> selectorList;
 
-    private boolean notNull = false;
+    private String matchUrlRegex;
+
+    private boolean notNull = false;        //不可空字段为空时，跳过page持久化
 
     public String getFieldName() {
         return fieldName;
@@ -96,6 +100,26 @@ public class VerticalExtractRule {
 
     public void setMulti(boolean multi) {
         this.multi = multi;
+    }
+
+    public String getMatchUrlRegex() {
+        return matchUrlRegex;
+    }
+
+    public void setMatchUrlRegex(String matchUrlRegex) {
+        this.matchUrlRegex = matchUrlRegex;
+    }
+
+    public boolean isMatchUrl(String url) {
+        if (StringUtils.isEmpty(matchUrlRegex)) {
+            return true;
+        }
+        Pattern itemPattern = Pattern.compile(matchUrlRegex);
+        Matcher m = itemPattern.matcher(url);
+        if (m.find()) {
+            return true;
+        }
+        return false;
     }
 
     public List<Selector> getSelectorList() {
