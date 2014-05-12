@@ -138,6 +138,7 @@ public class HttpClientDownloader extends AbstractDownloader {
                 .setCookieSpec(CookieSpecs.BEST_MATCH);
         if (site != null && site.getHttpProxy() != null) {
             requestConfigBuilder.setProxy(site.getHttpProxy());
+            logger.info("HttpClientDownloader use proxy ip={} port={}" , site.getHttpProxy().getHostName(), site.getHttpProxy().getPort());
         }
         requestBuilder.setConfig(requestConfigBuilder.build());
         return requestBuilder.build();

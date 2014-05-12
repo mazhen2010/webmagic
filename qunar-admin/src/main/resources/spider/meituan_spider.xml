@@ -198,6 +198,7 @@
 
     <bean id="meituanSpider" class="us.codecraft.webmagic.Spider">
         <constructor-arg ref="meituanProcessor"/>
+        <!--<property name="threadNum" value="2"/>-->
     </bean>
 
 </beans>

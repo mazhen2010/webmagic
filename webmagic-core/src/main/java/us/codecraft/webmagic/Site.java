@@ -2,6 +2,8 @@ package us.codecraft.webmagic;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
 import us.codecraft.webmagic.utils.UrlUtils;
 
@@ -45,7 +47,8 @@ public class Site {
 
     private Map<String, String> headers = new HashMap<String, String>();
 
-    private HttpHost httpProxy;
+    //private HttpHost httpProxy;
+    private List<String> proxyIpList;
 
     private boolean useGzip = true;
 
@@ -337,18 +340,27 @@ public class Site {
     }
 
     public HttpHost getHttpProxy() {
-        return httpProxy;
+        if (CollectionUtils.isEmpty(proxyIpList)) {
+            return null;
+        }
+
+        Random random = new Random();
+        int i = random.nextInt(proxyIpList.size());
+        String proxyIp = proxyIpList.get(i);
+        String[] ipAndPort = StringUtils.split(proxyIp, ":");
+        if (ipAndPort.length != 2) {
+            return null;
+        }
+
+        return new HttpHost(ipAndPort[0], Integer.valueOf(ipAndPort[1]));
     }
 
-    /**
-     * set up httpProxy for this site
-     *
-     * @param httpProxy
-     * @return
-     */
-    public Site setHttpProxy(HttpHost httpProxy) {
-        this.httpProxy = httpProxy;
-        return this;
+    public List<String> getProxyIpList() {
+        return proxyIpList;
+    }
+
+    public void setProxyIpList(List<String> proxyIpList) {
+        this.proxyIpList = proxyIpList;
     }
 
     public boolean isUseGzip() {

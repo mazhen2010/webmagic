@@ -695,4 +695,8 @@ public class Spider implements Runnable, Task {
     public Scheduler getScheduler() {
         return scheduler;
     }
+
+    public void setThreadNum(int threadNum) {
+        thread(threadNum);
+    }
 }
